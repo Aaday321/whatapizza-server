@@ -1,7 +1,15 @@
 export const Settings = {
-    PORT: 4000,
+    PORT: 3126,
+
+    SERVICE_NAME: 'what-a-pizza',
 
     Servers: {
-        DOORDASH: 'https://openapi.doordash.com/'
-    }
+        DoorDash: {
+                Routes: {
+                    ROOT: 'https://openapi.doordash.com/'
+                },
+                SECRET: process.env.DOORDASH_SECRET || '',
+            }
+        }
+    },
 }

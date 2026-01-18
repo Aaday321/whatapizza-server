@@ -1,5 +1,6 @@
 import { serve } from '@hono/node-server'
 import { Hono } from 'hono'
+import { Settings } from './config/settings.js'
 
 const app = new Hono()
 
@@ -14,7 +15,7 @@ app.get('/', (context) => {
 
 serve({
   fetch: app.fetch,
-  port: 3126
+  port: Settings.PORT || 3000,
 }, (info) => {
-  console.log(`Server is running on http://localhost:${info.port}`)
+  console.log(`${Settings.SERVICE_NAME} is running on http://localhost:${info.port}`)
 })

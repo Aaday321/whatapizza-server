@@ -8,9 +8,12 @@
   },
   "dependencies": {
     "@hono/node-server": "^1.19.8",
-    "hono": "^4.11.3"
+    "axios": "^1.13.2",
+    "hono": "^4.11.3",
+    "jsonwebtoken": "^9.0.3"
   },
   "devDependencies": {
+    "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "^20.11.17",
     "tsx": "^4.7.1",
     "typescript": "^5.8.3"

@@ -1,0 +1,61 @@
+import axios, { type AxiosInstance, type InternalAxiosRequestConfig } from "axios"
+import { Settings } from "../config/settings.js"
+import { makeToken } from "./helpers.js"
+
+interface BaseHttpClientOptions {
+    baseURL: string
+    secret?: string
+    requestInterceptors?: Array<(config: InternalAxiosRequestConfig) => InternalAxiosRequestConfig>
+    responseInterceptors?: Array<(response: any) => any>
+}
+
+export default class BaseHttpClient {
+
+    http: AxiosInstance
+    secret: string | undefined
+
+    constructor(options: BaseHttpClientOptions) {
+        this.secret = options.secret
+        const withCredentials = !!options.secret 
+        this.http = axios.create({
+            baseURL: options.baseURL,
+            withCredentials,
+        })
+
+        this.registerInterceptors(options.requestInterceptors, options.responseInterceptors)
+    }
+    private registerInterceptors(requestInterceptors?: Array<(config: InternalAxiosRequestConfig) => InternalAxiosRequestConfig>, responseInterceptors?: Array<(response: any) => any>  ) {
+        //Request Interceptors
+        if(this.secret){
+           const secret = this.secret
+            this.http.interceptors.request.use(
+                function addAuthToRequest(config: InternalAxiosRequestConfig) {
+                    const token = makeToken(secret)
+                    config.headers.Authorization = `Bearer ${token}`
+                    return config
+                }
+            )
+        }
+        if(Array.isArray(requestInterceptors)){
+            requestInterceptors.forEach(interceptor => {
+                this.http.interceptors.request.use(interceptor)
+            })
+        }
+
+        //Response Interceptors
+        if(Array.isArray(responseInterceptors)){
+            responseInterceptors.forEach(interceptor => {
+                this.http.interceptors.response.use(interceptor)
+            })
+        }
+    }
+}
+
+
+
+function responseInterceptor(response: any) {
+    if (response.status === 401) {
+        console.warn('Unauthorized response from DoorDash service')
+    }
+    return response
+}

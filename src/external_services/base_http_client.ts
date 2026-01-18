@@ -1,6 +1,7 @@
 import axios, { type AxiosInstance, type InternalAxiosRequestConfig } from "axios"
 import { Settings } from "../config/settings.js"
 import { makeToken } from "./helpers.js"
+import { log } from "console"
 
 interface BaseHttpClientOptions {
     baseURL: string
@@ -12,10 +13,12 @@ interface BaseHttpClientOptions {
 export default class BaseHttpClient {
 
     http: AxiosInstance
-    secret: string | undefined
+    private __secret: string | undefined
 
     constructor(options: BaseHttpClientOptions) {
-        this.secret = options.secret
+        console.log({options});
+        process.exit(1)
+        this.__secret = options.secret
         const withCredentials = !!options.secret 
         this.http = axios.create({
             baseURL: options.baseURL,
@@ -26,8 +29,10 @@ export default class BaseHttpClient {
     }
     private registerInterceptors(requestInterceptors?: Array<(config: InternalAxiosRequestConfig) => InternalAxiosRequestConfig>, responseInterceptors?: Array<(response: any) => any>  ) {
         //Request Interceptors
-        if(this.secret){
-           const secret = this.secret
+        if(this.__secret){
+            log("here")
+            process.exit(1)
+           const secret = this.__secret
             this.http.interceptors.request.use(
                 function addAuthToRequest(config: InternalAxiosRequestConfig) {
                     const token = makeToken(secret)

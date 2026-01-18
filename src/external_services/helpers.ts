@@ -12,9 +12,12 @@ export function makeToken(
         throw new Error('Secret is required to generate a token')
     }
     return jwt.sign(
-        {
-            service: Settings.SERVICE_NAME,
-            timestamp: Date.now()
+       {
+            aud: 'doordash',
+            iss: process.env.DOORDASH_DEVELOPER_ID,
+            kid: process.env.DOORDASH_KEY_ID,
+            iat: Math.floor(Date.now() / 1000),
+            exp: Math.floor(Date.now() / 1000) + (60 * 5), // 5 mins
         },
         secret,
         {

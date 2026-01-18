@@ -1,8 +1,5 @@
 import axios, { type AxiosInstance, type InternalAxiosRequestConfig } from "axios"
-import { Settings } from "../config/settings.js"
 import { makeToken } from "./helpers.js"
-import { log } from "console"
-
 interface BaseHttpClientOptions {
     baseURL: string
     secret?: string

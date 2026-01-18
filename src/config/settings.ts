@@ -18,5 +18,3 @@ export const Settings = {
         address: process.env.PERSONAL_ADDRESS || ''
     }
 }
-
-console.dir(Settings, { depth: null })
